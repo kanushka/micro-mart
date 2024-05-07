@@ -21,11 +21,12 @@ type Product readonly & record {|
 service /orders on new http:Listener(9090) {
 
     isolated resource function get .() returns Order[]|http:ClientError {
-        io:println("Order service invoked. Fetching products from the product service.")
+        io:println("Order service invoked. Fetching products from the product service.");
         string productServiceUrl = os:getEnv("PRODUCT_SERVICE_URL");
         http:Client productsEp = check new (url = productServiceUrl);
         Product[] products = check productsEp->/;
-        io:println("Products: " + products);
+        io:println("Products: ");
+        io:println(products);
 
         table<Order> key(id) orders = table [
             {id: "1", productId: "P001", quantity: 1, price: 1000.0, total: 2000.0, userId: "U001"},
