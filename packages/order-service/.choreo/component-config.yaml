@@ -1,10 +1,6 @@
 apiVersion: core.choreo.dev/v1beta1
 kind: ComponentConfig
 spec:
-  inbound:
-    - name: Order Service
-      port: 9090
-      type: REST
   outbound:
     serviceReferences:
       - name: choreo:///kanushka/micro-mart/ztnfkj/12651/v1/PUBLIC
