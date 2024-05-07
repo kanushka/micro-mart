@@ -1,0 +1,115 @@
+openapi: 3.0.1
+info:
+  title: Orders
+  version: 0.1.0
+servers:
+- url: "{server}:{port}/orders"
+  variables:
+    server:
+      default: http://localhost
+    port:
+      default: "9090"
+paths:
+  /:
+    get:
+      operationId: get
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        "500":
+          description: InternalServerError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientError'
+    post:
+      operationId: post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorPayload'
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          description: Ok
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    ClientError:
+      $ref: '#/components/schemas/ErrorPayload'
+    ErrorPayload:
+      required:
+      - message
+      - method
+      - path
+      - reason
+      - status
+      - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+        status:
+          type: integer
+          format: int64
+        reason:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+        method:
+          type: string
+    Order:
+      required:
+      - id
+      - price
+      - productId
+      - quantity
+      - total
+      - userId
+      type: object
+      properties:
+        id:
+          type: string
+        productId:
+          type: string
+        quantity:
+          type: integer
+          format: int64
+        price:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+        userId:
+          type: string
+          nullable: true
+      additionalProperties: false
